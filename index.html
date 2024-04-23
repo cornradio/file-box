@@ -3,12 +3,13 @@
 
 <head>
     <style>
-        body{
+        body {
             margin: 0;
             padding: 0;
             background-color: #262626;
             color: #666;
         }
+
         /* .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr ;
@@ -22,41 +23,52 @@
             height: 100vh;
             min-width: 370px;
             max-width: 30%;
-            box-shadow: 0 0 10px rgb(0, 0, 0) ;
+            box-shadow: 0 0 10px rgb(0, 0, 0);
         }
-        .filelist{
+
+        .filelist {
             overflow-y: scroll;
             background-color: #eae9e9;
+            height:78vh;
         }
-        .file{
+
+        .file {
             /* box-shadow:inset 0px -10px 2px rgba(109, 109, 109, 0.062),
             inset 0px 16px 2px rgba(255, 255, 255, 0.59); */
 
-            border: 1px solid rgb(157, 157, 157);
+            border-bottom: 1px solid rgb(157, 157, 157);
             height: 1.6em;
-            padding:0 5px 0 5px;
+            padding: 0 5px 0 5px;
         }
-        .file:hover{
+
+        .file:hover {
             background-color: #06ffb42f !important;
         }
-        .file-actions{
+
+        .file-actions {
+            float: right;
+        }
+        .file-size{
             float: right;
         }
 
-        .file:nth-child(even){
+        .file:nth-child(even) {
             background-color: #00000012;
         }
-        button:hover{
+
+        button:hover {
             transform: scale(1.1);
         }
-        button:active{
+
+        button:active {
             transform: scale(0.9);
         }
-        .file-actions button
-        {
+
+        .file-actions button {
             background-color: transparent;
             border: none;
         }
+
         /* .file-actions button:nth-child(1){
             background-color: greenyellow;
         }
@@ -67,20 +79,46 @@
 
 
         /* 控制台 操作按钮等 */
-        .panel{
+        .panel {
             background-color: #272727;
-            padding: 20px 0 5px 0 ;
-        }
-        .panel button{
-            float: right;
-            background-color: #022f2e;
-            color: rgb(6, 254, 213);
-            width: 22%;
-        }
-        .panel input{
-            width: 75%;
+            padding: 0;
+            margin: 0;
+            padding-bottom: .5em;
+            border: 0;
         }
 
+        .panel button {
+            float: right;
+            background-color: transparent !important;
+            color: rgb(6, 254, 213);
+            width: 20%;
+            border: none;
+
+        }
+
+        .panel input {
+            padding-left: .7em;
+            width: 70%;
+            background: #272727;
+            border: none;
+            color: white;
+        }
+        .panel label {
+            width: 70%;
+            padding-left: .7em;
+            font-size: small;
+        }
+        .panel h1 {
+            margin: 0;
+            line-height: 2em;
+            margin-left: .2em;
+            color: #ffffff;
+            text-shadow: 0 0 1px black;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
     </style>
 </head>
 
@@ -88,45 +126,49 @@
 
     <div class="grid-container">
 
-
-        <div class="item item1 filelist">
+        <div class="item item1">
 
             <div class="panel">
+                <h1>📦 file-box</h1>
                 <div class="fileinput">
-                    <input type="file"  />
-                    <button type="submit" >upload</button>
+                    <label for="file-upload">choose_file</label>
+                    <input id="file-upload" type="file" />
+                    <button type="submit">📤 Upload</button>
                 </div>
                 <input class="boxname" placeholder="box_name" />
-                <button>Go</button>
+                <button>🔀 Switch</button>
                 <input class="filesearch" placeholder="keyword" />
-                <button>search</button>
+                <button>🔎 Search</button>
             </div>
-            
-            <div class="file">
-                <span class="file-icon">🖼️</span>
-                <span class="file-name">imagexxx-xxx.png</span>
-                <span class="file-actions">
-                    <button>💾</button>
-                    <button>🗑️</button>
-                </span>
-            </div>
-            <div class="file">
-                <span class="file-icon">📄</span>
-                <span class="file-name">thing.xml</span>
-                <span class="file-actions">
-                    <button>💾</button>
-                    <button>🗑️</button>
-                </span>
-            </div>
-            <div class="file">
-                <span class="file-icon">📦</span>
-                <span class="file-name">juju.zip</span>
-                <span class="file-actions">
-                    <button>💾</button>
-                    <button>🗑️</button>
-                </span>
-            </div>
-        
+
+            <div class="filelist">
+                <div class="file">
+                    <span class="file-icon">🖼️</span>
+                    <span class="file-name">imagexxx-xxx.png</span>
+                    <span class="file-actions">
+                        <button>💾</button>
+                        <button>🗑️</button>
+                    </span>
+                </div>
+                <div class="file">
+                    <span class="file-icon">📄</span>
+                    <span class="file-name">thing.xml</span>
+                    <span class="file-actions">
+                        <button>💾</button>
+                        <button>🗑️</button>
+                    </span>
+                </div>
+                <div class="file">
+                    <span class="file-icon">📦</span>
+                    <span class="file-name">juju.zip</span>
+                    <span class="file-actions">
+                        <button>💾</button>
+                        <button>🗑️</button>
+                    </span>
+                </div>
+            </div>   
+
+
         </div>
     </div>
 </body>
