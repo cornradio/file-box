@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <title>file-box::box1</title>
     <style>
         body {
             margin: 0;
@@ -21,33 +22,35 @@
             /* grid-area: 1/2/ 1/3; */
             margin: 0 10px;
             height: 100vh;
-            min-width: 370px;
+            min-width: 380px;
             max-width: 30%;
             box-shadow: 0 0 10px rgb(0, 0, 0);
         }
 
+
         .filelist {
-            overflow-y: scroll;
-            background-color: #eae9e9;
-            height:78vh;
+            /* overflow-y: scroll; */
+            background-color: #0000002d;
         }
 
         .file {
             /* box-shadow:inset 0px -10px 2px rgba(109, 109, 109, 0.062),
             inset 0px 16px 2px rgba(255, 255, 255, 0.59); */
-
-            border-bottom: 1px solid rgb(157, 157, 157);
+            border-bottom: 1px solid rgb(0 0 0 / 50%);
             height: 1.6em;
+            color: rgba(241, 241, 241, 0.696);
             padding: 0 5px 0 5px;
         }
 
         .file:hover {
-            background-color: #06ffb42f !important;
+            background-color: #07845e2f !important;
+            color: rgba(164, 229, 23, 0.696);
         }
 
         .file-actions {
             float: right;
         }
+
         .file-size{
             float: right;
         }
@@ -57,7 +60,7 @@
         }
 
         button:hover {
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
 
         button:active {
@@ -67,6 +70,11 @@
         .file-actions button {
             background-color: transparent;
             border: none;
+            width: 22px;
+            
+        }
+        .file-actions button:last-child{
+            margin-right: 1px;
         }
 
         /* .file-actions button:nth-child(1){
@@ -80,18 +88,20 @@
 
         /* 控制台 操作按钮等 */
         .panel {
-            background-color: #272727;
+            background-color: #353535;
+            color: rgba(255, 255, 255, 0.307);
             padding: 0;
             margin: 0;
             padding-bottom: .5em;
             border: 0;
+            overflow: hidden;
         }
 
         .panel button {
             float: right;
             background-color: transparent !important;
-            color: rgb(6, 254, 213);
-            width: 20%;
+            color: rgb(0, 255, 213);
+            min-width:  20%;
             border: none;
 
         }
@@ -99,7 +109,7 @@
         .panel input {
             padding-left: .7em;
             width: 70%;
-            background: #272727;
+            background: transparent;
             border: none;
             color: white;
         }
@@ -151,7 +161,7 @@
                     </span>
                 </div>
                 <div class="file">
-                    <span class="file-icon">📄</span>
+                    <span class="file-icon">📜</span>
                     <span class="file-name">thing.xml</span>
                     <span class="file-actions">
                         <button>💾</button>
@@ -166,6 +176,7 @@
                         <button>🗑️</button>
                     </span>
                 </div>
+
             </div>   
 
 
