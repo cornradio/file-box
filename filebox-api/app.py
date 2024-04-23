@@ -8,13 +8,13 @@ CORS(app)
 
 @app.route("/<boxname>/filelist")
 def get_filelist(boxname):
-    return {
-        "files": [
-            "./box1/file1.txt",
-            "./box1/file2.txt",
-            "./box1/file3.txt"
-        ]
-    }
+    # get file list from boxname floder
+    if not os.path.exists('./'+boxname): 
+        os.makedirs('./'+boxname)
+    filelist = os.listdir('./'+boxname)
+    print(filelist)
+
+    return filelist
 
 @app.route("/<boxname>/upload", methods=['POST','GET'])
 def uploadfile(boxname):

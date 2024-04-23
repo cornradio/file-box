@@ -3,7 +3,6 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
     <!-- emoji icon -->
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>"
@@ -29,15 +28,25 @@
         .filelist {
             /* overflow-y: scroll; */
             background-color: #0000002d;
+
         }
 
         .file {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            vertical-align:middle;
             /* box-shadow:inset 0px -10px 2px rgba(109, 109, 109, 0.062),
             inset 0px 16px 2px rgba(255, 255, 255, 0.59); */
+            /* overflow: hidden; */
             border-bottom: 1px solid rgb(0 0 0 / 50%);
             height: 1.6em;
             color: rgb(212, 212, 212);
             padding: 0 5px 0 5px;
+        }
+        .file-name{
+            text-wrap: nowrap;
+            display: inline-block;
         }
 
         .file:hover {
@@ -46,11 +55,7 @@
         }
 
         .file-actions {
-            float: right;
-        }
-
-        .file-size {
-            float: right;
+            margin-left: auto;
         }
 
         .file:nth-child(even) {
@@ -69,12 +74,12 @@
             background-color: transparent;
             border: none;
             width: 22px;
-
         }
 
         .file-actions button:last-child {
             margin-right: 1px;
         }
+
 
         /* .file-actions button:nth-child(1){
             background-color: greenyellow;
@@ -131,6 +136,65 @@
             display: none;
         }
     </style>
+    <style>
+        /* toast */
+        #toastContainer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .toast {
+            background-color: #f1f1f1;
+            border: 1px solid #afafaf;
+            color: #000000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            font-size: smaller;
+            padding: 5px 10px;
+            border-radius: 100px;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: float-in 0.3s ease-in-out;
+            /* transition: 0.3s ease-in-out; */
+        }
+
+        .toast.dark-mode {
+            background-color: #444;
+            border: 1px solid #2d2d2d;
+            color: #d8d8d8;
+        }
+
+        .toast.show {
+            opacity: 0.8;
+        }
+
+        .toast.hide {
+            animation: slide-out 0.5s ease-in-out;
+        }
+
+        @keyframes float-in {
+            0% {
+                transform: translateY(20px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slide-out {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -142,61 +206,165 @@
             <div class="panel">
                 <h1>📦 file-box</h1>
                 <div class="fileinput">
-                    <label for="file-upload">choose_file</label>
-                    <input name="the_file" id="file-upload" type="file" />
+                    <input id="file_lable" onclick="choosefile()" placeholder="choose_file" for="the_file"></input>
+                    <input id="the_file" type="file" />
                     <button type="submit" onclick="uploadFile()">📤 Upload</button>
                 </div>
-                <input class="boxname" placeholder="box_name" />
+                <input id="boxname" placeholder="box_name" />
                 <button>🔀 Switch</button>
-                <input class="filesearch" placeholder="keyword" />
+                <input id="filesearch" placeholder="keyword" />
                 <button>🔎 Search</button>
+                <input id="filelist_info" placeholder="3_files" />
+                <button onclick="refreshFilelist()">🔄 Reload</button>
             </div>
 
             <div class="filelist">
                 <div class="file">
                     <span class="file-icon">🖼️</span>
-                    <span class="file-name">imagexxx-xxx.png</span>
-                    <span class="file-actions">
-                        <button>👁️</button>
-                        <button>💾</button>
-                        <button>🗑️</button>
-                    </span>
-                </div>
-                <div class="file">
-                    <span class="file-icon">📜</span>
-                    <span class="file-name">thing.xml</span>
+                    <small class="file-name">image.png</small>
                     <span class="file-actions">
                         <button>💾</button>
                         <button>🗑️</button>
                     </span>
                 </div>
-                <div class="file">
-                    <span class="file-icon">📦</span>
-                    <span class="file-name">juju.zip</span>
-                    <span class="file-actions">
-                        <button>💾</button>
-                        <button>🗑️</button>
-                    </span>
-                </div>
-
             </div>
+            <div id="toastContainer"></div>
 
 
         </div>
     </div>
-</body>
 
+</body>
 <script>
-    function uploadFile() {
-        alert("Uploaded!");
-        axios(
-            {
-                method: 'Get',
-                url: 'http://localhost:3000/posts/2'
-            }).then((res) => {
-                console.log(res);
-            });
+    // Toast
+    function showToast(textContent, darkMode) {
+        var toast = document.createElement('div');// 创建Toast元素
+        toast.classList.add('toast');
+        toast.textContent = textContent;
+
+        var container = document.getElementById('toastContainer');// 将Toast添加到容器中
+        container.appendChild(toast);
+
+        if (darkMode) {
+            toast.classList.toggle('dark-mode');// 设置深色模式
+        }
+
+        setTimeout(function () {// 显示Toast
+            toast.classList.add('show');
+        }, 30);
+
+        setTimeout(function () {// 隐藏Toast
+            toast.classList.add('hide');
+            setTimeout(function () {
+                container.removeChild(toast);
+            }, 300);
+        }, 1000);
+    }
+    //filesize 转换带单位
+    function getReadableFileSizeString(fileSizeInBytes) {
+        var i = -1;
+        var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+        do {
+            fileSizeInBytes /= 1024;
+            i++;
+        } while (fileSizeInBytes > 1024);
+
+        return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
     }
 </script>
 
+<script src="axios.js"></script>
+<script>
+    // set api url
+    axios.defaults.baseURL = 'http://localhost:3000/box1';
+
+    // upload
+    function uploadFile() {
+        let config = {
+            url: '/upload',
+            method: 'Post',
+            data: {
+                the_file: document.querySelector('#the_file').files[0]
+            },
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        axios(config)
+            .then((response) => {
+                console.log(response);
+                showToast('✅ Upload success', false);
+            })
+    }
+    // upload - choosing by clicking input text
+    function choosefile() {
+        console.log('choosing');
+        document.getElementById("the_file").click();
+    }
+    // upload - get file size and name
+    let fileinput = document.querySelector('#the_file');
+    fileinput.addEventListener('change', (e) => {
+        let file_lable_input = document.querySelector('#file_lable');
+        file_lable_input.value = '[' + getReadableFileSizeString(fileinput.files[0].size) + '] ' + fileinput.files[0].name;
+    })
+
+    // refresh the filelist 
+    function refreshFilelist() {
+        axios.get('/filelist')
+            .then((response) => {
+                console.log(response);
+                let filelist = document.querySelector('.filelist');
+                filelist.innerHTML = '';
+                for (let i = 0; i < response.data.length; i++) {
+                    let file = document.createElement('div');
+                    file.classList.add('file');
+
+                    let filename = response.data[i]
+                    file.innerHTML =
+                        '<span class="file-icon">' +
+                        getIconbyExtension(filename) +
+                        '</span> <small class="file-name"> '+ shortName(filename) + '</small>' +
+                        '<span class="file-actions"><button>💾</button><button>🗑️</button></span>';
+                    filelist.appendChild(file);
+                }
+                let filelistinfo = document.querySelector('#filelist_info');
+                filelistinfo.value = response.data.length + '_files';//计数器
+
+            })
+    }
+    //getIconbyExtension
+    function getIconbyExtension(file) {
+        let extension = file.split('.')[1];
+        switch (extension) {
+            case 'png':
+                return '🖼️';
+            case 'jpg':
+                return '🖼️';
+            case 'gif':
+                return '🖼️';
+            case 'zip':
+                return '📦';
+            case 'txt':
+                return '📜';
+            case 'exe':
+                return '💽';
+            default:
+                return '🧩';
+        }
+    }
+    function shortName(filename){
+        if (filename.length<=30)
+            return filename;
+        else{
+            let extension = '';
+            if (filename.split('.')[1]!=null)
+                extension = filename.split('.')[1];
+            let a = filename.slice(0, 25) + '...';
+            let b = a + ' .' +extension
+            return b;
+        }
+        
+    }
+
+</script>
 </html>
