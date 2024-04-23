@@ -2,7 +2,13 @@
 <html>
 
 <head>
-    <title>file-box::box1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <!-- emoji icon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>"
+        type="image/x-icon">
+    <title>box1</title>
     <style>
         body {
             margin: 0;
@@ -11,16 +17,8 @@
             color: #666;
         }
 
-        /* .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr ;
-            grid-template-rows: 100vh;
-        }
-        */
-
         .item1 {
-            /* grid-area: 1/2/ 1/3; */
-            margin: 0 10px;
+            /* margin: 0 10px; */
             height: 100vh;
             min-width: 380px;
             max-width: 30%;
@@ -38,7 +36,7 @@
             inset 0px 16px 2px rgba(255, 255, 255, 0.59); */
             border-bottom: 1px solid rgb(0 0 0 / 50%);
             height: 1.6em;
-            color: rgba(241, 241, 241, 0.696);
+            color: rgb(212, 212, 212);
             padding: 0 5px 0 5px;
         }
 
@@ -51,7 +49,7 @@
             float: right;
         }
 
-        .file-size{
+        .file-size {
             float: right;
         }
 
@@ -71,9 +69,10 @@
             background-color: transparent;
             border: none;
             width: 22px;
-            
+
         }
-        .file-actions button:last-child{
+
+        .file-actions button:last-child {
             margin-right: 1px;
         }
 
@@ -101,7 +100,7 @@
             float: right;
             background-color: transparent !important;
             color: rgb(0, 255, 213);
-            min-width:  20%;
+            min-width: 20%;
             border: none;
 
         }
@@ -113,11 +112,13 @@
             border: none;
             color: white;
         }
+
         .panel label {
             width: 70%;
             padding-left: .7em;
             font-size: small;
         }
+
         .panel h1 {
             margin: 0;
             line-height: 2em;
@@ -142,8 +143,8 @@
                 <h1>📦 file-box</h1>
                 <div class="fileinput">
                     <label for="file-upload">choose_file</label>
-                    <input id="file-upload" type="file" />
-                    <button type="submit">📤 Upload</button>
+                    <input name="the_file" id="file-upload" type="file" />
+                    <button type="submit" onclick="uploadFile()">📤 Upload</button>
                 </div>
                 <input class="boxname" placeholder="box_name" />
                 <button>🔀 Switch</button>
@@ -156,6 +157,7 @@
                     <span class="file-icon">🖼️</span>
                     <span class="file-name">imagexxx-xxx.png</span>
                     <span class="file-actions">
+                        <button>👁️</button>
                         <button>💾</button>
                         <button>🗑️</button>
                     </span>
@@ -177,11 +179,24 @@
                     </span>
                 </div>
 
-            </div>   
+            </div>
 
 
         </div>
     </div>
 </body>
+
+<script>
+    function uploadFile() {
+        alert("Uploaded!");
+        axios(
+            {
+                method: 'Get',
+                url: 'http://localhost:3000/posts/2'
+            }).then((res) => {
+                console.log(res);
+            });
+    }
+</script>
 
 </html>

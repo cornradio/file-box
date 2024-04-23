@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fileupload</title>
+</head>
+<body>
+    <input name="the_file" id="fileInput" type="file" />
+    <button type="submit" onclick="uploadFile()">📤 Upload</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    function uploadFile() {
+    //   var fileInput = document.getElementById('file-upload');
+      var formData = new FormData();
+      formData.append('the_file', fileInput.files[0])
+      
+      axios.post('http://127.0.0.1:3000/box1/upload', formData)
+        .then(response => {
+          if (response.ok) {
+            console.log('文件内容已成功保存');
+            // showToast('💾 Save ok', document.body.classList.contains('dark-mode'));
+          } else {
+            console.error('保存文件内容时出错');
+            alert('保存文件内容时出错')
+          }
+        })
+        .catch(error => {
+          // showToast('☠️ API dead', document.body.classList.contains('dark-mode'));// Toast match dark mode
+        });
+    }
+  </script>
+</body>
+</html>
