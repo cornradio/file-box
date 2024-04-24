@@ -18,9 +18,9 @@
                 max-width: none !important;
                 min-width: none !important;
 
-                min-height: 80vh !important;
+                min-height: 90vh !important;
 
-                margin: 40px 0;
+                margin: 15px 0;
             }
 
             .file-actions button:last-child {
@@ -35,6 +35,11 @@
             margin: 0;
             padding: 0;
             background-color: #262626;
+            color: black !important;
+        }
+
+        body.dark-mode {
+            background-color: #262626;
             color: #666;
         }
 
@@ -44,16 +49,34 @@
             min-width: 380px;
             max-width: 30%;
             box-shadow: 0 0 10px rgb(0, 0, 0);
+            background-color: #fff;
+
         }
 
-
-        .filelist {
-            /* overflow-y: scroll; */
+        .item1.dark-mode {
+            /* margin: 0 10px; */
+            min-height: 100vh;
+            min-width: 380px;
+            max-width: 30%;
+            box-shadow: 0 0 10px rgb(0, 0, 0);
             background-color: #0000002d;
-
         }
+
+
+
 
         .file {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            vertical-align: middle;
+            border-bottom: 1px solid rgb(0 0 0 / 50%);
+            height: 1.6em;
+            color: rgb(31, 31, 31);
+            padding: 0 5px 0 5px;
+        }
+
+        .file.dark-mode {
             display: flex;
             align-items: center;
             flex-wrap: nowrap;
@@ -73,8 +96,8 @@
         }
 
         .file:hover {
-            background-color: #07845e2f !important;
-            color: rgba(164, 229, 23, 0.696);
+            background-color: #003224 !important;
+            color: rgb(168, 247, 0);
         }
 
         .file-actions {
@@ -114,8 +137,17 @@
 
 
         /* 控制台 操作按钮等 */
-        .panel {
+        .panel.dark-mode {
             background-color: #1b1b1b;
+            color: rgba(255, 255, 255, 0.307);
+            padding: 0;
+            margin: 0;
+            padding-bottom: .5em;
+            border: 0;
+            overflow: hidden;
+        }
+        .panel {
+            background-image: linear-gradient(135deg, rgb(67, 33, 101) 10%, rgb(150, 143, 231) 100%);
             color: rgba(255, 255, 255, 0.307);
             padding: 0;
             margin: 0;
@@ -236,7 +268,7 @@
                 <!-- <input id="filesearch" placeholder="keyword" />
                 <button>🔎 Search</button> -->
                 <input id="" placeholder="Darkmode" />
-                <button onclick="">💡 Day</button>
+                <button id="toggleMode">💡 Toggle</button>
                 <input id="filelist_info" placeholder="3_files" />
                 <button onclick="checkcmd()">🔄 Reload</button>
             </div>
@@ -258,7 +290,7 @@
     </div>
 
 </body>
-<script>// Toast
+<script>// Misc
     function showToast(textContent, darkMode) {
         var toast = document.createElement('div');// 创建Toast元素
         toast.classList.add('toast');
@@ -342,6 +374,26 @@
                 refreshFilelist(true);
         }
     }
+    const toggleButton = document.getElementById('toggleMode');
+    toggleButton.addEventListener('click', function () {
+        toggleDarkMode();
+        saveDarkMode();
+    });
+    function toggleDarkMode() {
+        var elements = document.querySelectorAll('*');
+
+        // 遍历所有元素
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.toggle('dark-mode');
+        }
+        // document.body.classList.toggle('dark-mode');
+        // document.querySelector('.file').classList.toggle('dark-mode');
+    }
+    function saveDarkMode() {
+        var darkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', darkMode);
+        console.log('Dark mode saved to localStorage: ' + darkMode);
+    }
 </script>
 
 <script src="axios.js"></script>
@@ -353,7 +405,7 @@
     var ip = url.split('/')[2].split('/')[0].split(':')[0];
     console.log("从 url 获取服务器 ip: " + ip)
     apiserver = ip
-    
+
     axios.defaults.baseURL = `http://${ip}:${port}/box1`;
     console.log('apiport.txt notfound -- use defult port: 3000 ;');
 
