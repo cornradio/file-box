@@ -235,6 +235,8 @@
                 <button>🔀 Switch</button> -->
                 <!-- <input id="filesearch" placeholder="keyword" />
                 <button>🔎 Search</button> -->
+                <input id="" placeholder="Darkmode" />
+                <button onclick="">💡 Day</button>
                 <input id="filelist_info" placeholder="3_files" />
                 <button onclick="checkcmd()">🔄 Reload</button>
             </div>
@@ -343,6 +345,7 @@
 </script>
 
 <script src="axios.js"></script>
+<script src="port.js"></script>
 <script>//api
     //获取当前url
     var url = window.location.href;
@@ -350,26 +353,9 @@
     var ip = url.split('/')[2].split('/')[0].split(':')[0];
     console.log("从 url 获取服务器 ip: " + ip)
     apiserver = ip
-    port = '3000' //端口号默认3000
-
-    fetch('apiport.txt')
-        .then(response => {
-            if (response.ok) {
-                return response.text();
-            } else {
-                throw new Error('apiport.txt not found');
-            }
-        })
-        .then(myport => {
-            port = `${myport}`;
-            console.log('apiport.txt -- use api port:' + port);
-            axios.defaults.baseURL = `http://${ip}:${port}/box1`;
-        })
-        .catch(error => {
-            console.log('apiport.txt notfound -- use defult port: 3000 ;');
-            axios.defaults.baseURL = `http://${ip}:${port}/box1`;
-        });
-
+    
+    axios.defaults.baseURL = `http://${ip}:${port}/box1`;
+    console.log('apiport.txt notfound -- use defult port: 3000 ;');
 
     // upload
     function uploadFile() {
