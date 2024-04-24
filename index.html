@@ -3,12 +3,34 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+
     <!-- emoji icon -->
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>"
         type="image/x-icon">
     <title>box1</title>
     <style>
+        /* media */
+        @media (max-width: 600px) {
+            .item1 {
+                width: 100% !important;
+                max-width: none !important;
+                min-width: none !important;
+
+                min-height: 80vh !important;
+
+                margin: 40px 0;
+            }
+
+            .file-actions button:last-child {
+                margin-right: 10px !important;
+            }
+
+        }
+    </style>
+    <style>
+        /* main style */
         body {
             margin: 0;
             padding: 0;
@@ -18,7 +40,7 @@
 
         .item1 {
             /* margin: 0 10px; */
-            height: 100vh;
+            min-height: 100vh;
             min-width: 380px;
             max-width: 30%;
             box-shadow: 0 0 10px rgb(0, 0, 0);
@@ -35,7 +57,7 @@
             display: flex;
             align-items: center;
             flex-wrap: nowrap;
-            vertical-align:middle;
+            vertical-align: middle;
             /* box-shadow:inset 0px -10px 2px rgba(109, 109, 109, 0.062),
             inset 0px 16px 2px rgba(255, 255, 255, 0.59); */
             /* overflow: hidden; */
@@ -44,7 +66,8 @@
             color: rgb(212, 212, 212);
             padding: 0 5px 0 5px;
         }
-        .file-name{
+
+        .file-name {
             text-wrap: nowrap;
             display: inline-block;
         }
@@ -140,20 +163,18 @@
         /* toast */
         #toastContainer {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
+            bottom: 10px;
+            left: 10px;
             z-index: 9999;
             transition: all 0.3s ease-in-out;
         }
 
         .toast {
-            background-color: #f1f1f1;
-            border: 1px solid #afafaf;
-            color: #000000;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.438);
+            backdrop-filter: blur(10px);
+            color: #00ebd7;
             font-size: smaller;
-            padding: 5px 10px;
-            border-radius: 100px;
+            padding: 4px 8px;
             margin-bottom: 10px;
             opacity: 0;
             animation: float-in 0.3s ease-in-out;
@@ -208,14 +229,14 @@
                 <div class="fileinput">
                     <input id="file_lable" onclick="choosefile()" placeholder="choose_file" for="the_file"></input>
                     <input id="the_file" type="file" />
-                    <button type="submit" onclick="uploadFile()">📤 Upload</button>
+                    <button type="submit" onclick="uploadFile();refreshFilelist(false);">📤 Upload</button>
                 </div>
-                <input id="boxname" placeholder="box_name" />
-                <button>🔀 Switch</button>
-                <input id="filesearch" placeholder="keyword" />
-                <button>🔎 Search</button>
+                <!-- <input id="boxname" placeholder="box_name" />
+                <button>🔀 Switch</button> -->
+                <!-- <input id="filesearch" placeholder="keyword" />
+                <button>🔎 Search</button> -->
                 <input id="filelist_info" placeholder="3_files" />
-                <button onclick="refreshFilelist()">🔄 Reload</button>
+                <button onclick="checkcmd()">🔄 Reload</button>
             </div>
 
             <div class="filelist">
@@ -235,8 +256,7 @@
     </div>
 
 </body>
-<script>
-    // Toast
+<script>// Toast
     function showToast(textContent, darkMode) {
         var toast = document.createElement('div');// 创建Toast元素
         toast.classList.add('toast');
@@ -271,67 +291,6 @@
 
         return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
     }
-</script>
-
-<script src="axios.js"></script>
-<script>
-    // set api url
-    axios.defaults.baseURL = 'http://localhost:3000/box1';
-
-    // upload
-    function uploadFile() {
-        let config = {
-            url: '/upload',
-            method: 'Post',
-            data: {
-                the_file: document.querySelector('#the_file').files[0]
-            },
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }
-        axios(config)
-            .then((response) => {
-                console.log(response);
-                showToast('✅ Upload success', false);
-            })
-    }
-    // upload - choosing by clicking input text
-    function choosefile() {
-        console.log('choosing');
-        document.getElementById("the_file").click();
-    }
-    // upload - get file size and name
-    let fileinput = document.querySelector('#the_file');
-    fileinput.addEventListener('change', (e) => {
-        let file_lable_input = document.querySelector('#file_lable');
-        file_lable_input.value = '[' + getReadableFileSizeString(fileinput.files[0].size) + '] ' + fileinput.files[0].name;
-    })
-
-    // refresh the filelist 
-    function refreshFilelist() {
-        axios.get('/filelist')
-            .then((response) => {
-                console.log(response);
-                let filelist = document.querySelector('.filelist');
-                filelist.innerHTML = '';
-                for (let i = 0; i < response.data.length; i++) {
-                    let file = document.createElement('div');
-                    file.classList.add('file');
-
-                    let filename = response.data[i]
-                    file.innerHTML =
-                        '<span class="file-icon">' +
-                        getIconbyExtension(filename) +
-                        '</span> <small class="file-name"> '+ shortName(filename) + '</small>' +
-                        '<span class="file-actions"><button>💾</button><button>🗑️</button></span>';
-                    filelist.appendChild(file);
-                }
-                let filelistinfo = document.querySelector('#filelist_info');
-                filelistinfo.value = response.data.length + '_files';//计数器
-
-            })
-    }
     //getIconbyExtension
     function getIconbyExtension(file) {
         let extension = file.split('.')[1];
@@ -352,19 +311,189 @@
                 return '🧩';
         }
     }
-    function shortName(filename){
-        if (filename.length<=30)
+    //turn long name into short name
+    function shortName(filename) {
+        if (filename.length <= 30)
             return filename;
-        else{
+        else {
             let extension = '';
-            if (filename.split('.')[1]!=null)
+            if (filename.split('.')[1] != null)
                 extension = filename.split('.')[1];
             let a = filename.slice(0, 25) + '...';
-            let b = a + ' .' +extension
+            let b = a + ' .' + extension
             return b;
         }
-        
+
+    }
+    //checkcmd -- commands for special purpose
+    function checkcmd() {
+        let cmd = document.getElementById('filelist_info').value;
+        switch (cmd) {
+            case 'da'://deleteall
+                console.log('da');
+                let x = confirm('sure delete all files?');
+                if (x == true)
+                    deleteAllFile();
+                refreshFilelist(false);
+                break;
+            default:
+                refreshFilelist(true);
+        }
+    }
+</script>
+
+<script src="axios.js"></script>
+<script>//api
+    //获取当前url
+    var url = window.location.href;
+    //提取url的ip
+    var ip = url.split('/')[2].split('/')[0].split(':')[0];
+    console.log("从 url 获取服务器 ip: " + ip)
+    apiserver = ip
+    port = '3000' //端口号默认3000
+
+    fetch('apiport.txt')
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('apiport.txt not found');
+            }
+        })
+        .then(myport => {
+            port = `${myport}`;
+            console.log('apiport.txt -- use api port:' + port);
+            axios.defaults.baseURL = `http://${ip}:${port}/box1`;
+        })
+        .catch(error => {
+            console.log('apiport.txt notfound -- use defult port: 3000 ;');
+            axios.defaults.baseURL = `http://${ip}:${port}/box1`;
+        });
+
+
+    // upload
+    function uploadFile() {
+        if (document.querySelector('#the_file').files[0] == null) {
+            showToast('❌ Empty file', false);
+            return;
+        }
+
+        let config = {
+            url: '/upload',
+            method: 'Post',
+            data: {
+                the_file: document.querySelector('#the_file').files[0]
+            },
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        axios(config)
+            .then((response) => {
+                console.log(response);
+                showToast('📤 Upload success', false);
+            })
+            .catch((error) => {
+                console.log(error);
+                if (toast)
+                    showToast('❌ Upload failed', false);
+            })
+    }
+    // upload - choosing by clicking input text
+    function choosefile() {
+        console.log('choosing');
+        document.getElementById("the_file").click();
+    }
+    // upload - get file size and name
+    let fileinput = document.querySelector('#the_file');
+    fileinput.addEventListener('change', (e) => {
+        let file_lable_input = document.querySelector('#file_lable');
+        file_lable_input.value = '[' + getReadableFileSizeString(fileinput.files[0].size) + '] ' + fileinput.files[0].name;
+    })
+
+
+    //function deleteFile
+    function deleteFile(filename) {
+        axios.get('/delete/' + filename)
+            .then((response) => {
+                showToast('🗑️ Delete success', false);
+            })
+            .catch((error) => {
+                console.log(error);
+                if (toast)
+                    showToast('❌ Delete failed', false);
+            })
     }
 
+    //function deleteFile
+    function deleteAllFile() {
+        axios.get('/deleteall/')
+            .then((response) => {
+                showToast('🗑️ Delete All Done', false);
+            })
+            .catch((error) => {
+                console.log(error);
+                if (toast)
+                    showToast('❌ Delete failed', false);
+            })
+    }
+    //function downloadFile
+    function downloadFile(filename) {
+        axios.get('/download/' + filename, { responseType: 'blob' })
+            .then((response) => { // 处理成功的响应
+                const url = window.URL.createObjectURL(new Blob([response.data])); // 创建一个临时URL
+                const link = document.createElement('a'); // 创建一个下载链接
+                link.href = url; // 设置链接的URL
+                link.setAttribute('download', filename); // 设置下载的文件名
+                document.body.appendChild(link); // 将链接添加到页面中
+                link.click(); // 模拟点击下载
+                link.remove(); // 移除链接
+                window.URL.revokeObjectURL(url); // 释放临时URL资源
+                showToast('📥 Download success', false); // 显示下载成功的提示
+            })
+            .catch((error) => { // 处理失败的响应
+                console.log(error);
+                showToast('❌ Download failed', false); // 显示下载失败的提示
+            });
+    }
 </script>
+<script>//refreash funcion 
+    function refreshFilelist(toast = true) {
+        axios.get('/filelist')
+            .then((response) => {
+                console.log(response);
+                let filelist = document.querySelector('.filelist');
+                filelist.innerHTML = '';
+                for (let i = 0; i < response.data.length; i++) {
+                    let file = document.createElement('div');
+                    file.classList.add('file');
+
+                    let filename = response.data[i]
+                    file.innerHTML =
+                        '<span class="file-icon">' +
+                        getIconbyExtension(filename) +
+                        '</span> <small class="file-name"> ' + shortName(filename) + '</small>' +
+                        '<span class="file-actions">\
+                            <button onclick="downloadFile(`'+ filename + '`);refreshFilelist(false);">💾</button>\
+                            <button onclick="deleteFile(`'+ filename + '`);refreshFilelist(false);">🗑️</button>\
+                            </span>';
+                    filelist.appendChild(file);
+                }
+                if (toast)
+                    showToast('🔰 Reload success', false);
+                //计数器
+                let filelistinfo = document.querySelector('#filelist_info');
+                filelistinfo.value = response.data.length + '_files';
+            })
+            .catch((error) => {
+                console.log(error);
+                if (toast)
+                    showToast('❌ Reload failed', false);
+            })
+    }
+</script>
+<script>//onload
+    refreshFilelist();
+</script>
+
 </html>
