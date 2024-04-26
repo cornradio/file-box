@@ -18,7 +18,7 @@
                 max-width: none !important;
                 min-width: none !important;
 
-                min-height: 90vh !important;
+                min-height: 90vh !important;·
 
                 margin: 15px 0;
             }
@@ -35,12 +35,12 @@
             margin: 0;
             padding: 0;
             background-color: #262626;
-            color: black !important;
+            color: rgb(31, 31, 31);
         }
 
         body.dark-mode {
             background-color: #262626;
-            color: #666;
+            color: rgb(212, 212, 212);
         }
 
         .item1 {
@@ -48,7 +48,8 @@
             min-height: 100vh;
             min-width: 380px;
             max-width: 30%;
-            box-shadow: 0 0 10px rgb(0, 0, 0);
+            /* box-shadow: 0 0 10px rgb(0, 0, 0); */
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
             background-color: #fff;
 
         }
@@ -70,9 +71,8 @@
             align-items: center;
             flex-wrap: nowrap;
             vertical-align: middle;
-            border-bottom: 1px solid rgb(0 0 0 / 50%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.192);
             height: 1.6em;
-            color: rgb(31, 31, 31);
             padding: 0 5px 0 5px;
         }
 
@@ -84,9 +84,8 @@
             /* box-shadow:inset 0px -10px 2px rgba(109, 109, 109, 0.062),
             inset 0px 16px 2px rgba(255, 255, 255, 0.59); */
             /* overflow: hidden; */
-            border-bottom: 1px solid rgb(0 0 0 / 50%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
             height: 1.6em;
-            color: rgb(212, 212, 212);
             padding: 0 5px 0 5px;
         }
 
@@ -97,13 +96,8 @@
 
         .file:hover {
             background-color: #0000005a !important;
-            color: rgb(16, 16, 16);
         }
         
-        .file.dark-mode:hover {
-            background-color: #003224 !important;
-            color: rgb(168, 247, 0);
-        }
 
         .file-actions {
             margin-left: auto;
@@ -144,6 +138,8 @@
         /* 控制台 操作按钮等 */
         .panel.dark-mode {
             background-color: #1b1b1b;
+            background-image: linear-gradient(135deg, rgb(67, 33, 101) 10%, rgb(150, 143, 231) 100%);
+
             color: rgba(227, 227, 227, 0.23);
             padding: 0;
             margin: 0;
@@ -152,7 +148,7 @@
             overflow: hidden;
         }
         .panel {
-            background-image: linear-gradient(135deg, rgb(67, 33, 101) 10%, rgb(150, 143, 231) 100%);
+background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
             color: rgba(255, 255, 255, 0.307);
             padding: 0;
             margin: 0;
@@ -164,7 +160,15 @@
         .panel button {
             float: right;
             background-color: transparent !important;
-            color: rgb(0, 255, 213);
+            color: rgb(19, 4, 131);
+            min-width: 20%;
+            border: none;
+
+        }
+        .panel button.dark-mode {
+            float: right;
+            background-color: transparent !important;
+            color: rgb(87, 33, 121);
             min-width: 20%;
             border: none;
 
@@ -537,6 +541,11 @@
 </script>
 <script>//onload
     refreshFilelist();
+    var storedDarkMode = localStorage.getItem('darkMode');
+            console.log('从 localStorage 加载暗黑模式: ' + storedDarkMode);
+            if (storedDarkMode == 'true') {
+                toggleDarkMode();
+            }
 </script>
 
 </html>
