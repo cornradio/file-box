@@ -14,13 +14,13 @@
         /* media */
         @media (max-width: 600px) {
             .item1 {
-                width: 100% !important;
+                width: 90% !important;
                 max-width: none !important;
                 min-width: none !important;
 
-                min-height: 90vh !important;·
-
+                min-height: 90vh !important;
                 margin: 15px 0;
+
             }
 
             .file-actions button:last-child {
@@ -32,6 +32,9 @@
     <style>
         /* main style */
         body {
+            background-image: url(https://w.wallhaven.cc/full/2y/wallhaven-2y5me6.png); 
+            /* background-image: url(https://w.wallhaven.cc/full/x6/wallhaven-x6ypkv.jpg); */
+            background-size: cover;
             margin: 0;
             padding: 0;
             background-color: #262626;
@@ -44,25 +47,26 @@
         }
 
         .item1 {
-            /* margin: 0 10px; */
-            min-height: 100vh;
+            transition: .3s;
+            padding: 4px;
+            min-height: 95vh;
             min-width: 380px;
-            max-width: 30%;
+            max-width: 25%;
             /* box-shadow: 0 0 10px rgb(0, 0, 0); */
             box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-            background-color: #fff;
+            background-color: #ffffff;
+            border-radius: 20px;
+            margin: 20px;
+            backdrop-filter: blur(5px);
+
 
         }
 
         .item1.dark-mode {
             /* margin: 0 10px; */
-            min-height: 100vh;
-            min-width: 380px;
-            max-width: 30%;
             box-shadow: 0 0 10px rgb(0, 0, 0);
-            background-color: #0000002d;
+            background-color: #000000c4;
         }
-
 
 
 
@@ -75,6 +79,14 @@
             height: 1.6em;
             padding: 0 5px 0 5px;
         }
+        .file-icon{
+            margin-right: 6px;
+        }
+
+        .file:hover {
+            background-color: #42c3f699 !important;
+            border-bottom: 1px solid #5da9f5;
+        }
 
         .file.dark-mode {
             display: flex;
@@ -84,20 +96,22 @@
             /* box-shadow:inset 0px -10px 2px rgba(109, 109, 109, 0.062),
             inset 0px 16px 2px rgba(255, 255, 255, 0.59); */
             /* overflow: hidden; */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.088);
             height: 1.6em;
             padding: 0 5px 0 5px;
         }
+
+        .file.dark-mode:hover {
+            background-color: #490a8139 !important;
+            border-bottom: 1px solid #851090;
+        }
+
 
         .file-name {
             text-wrap: nowrap;
             display: inline-block;
         }
 
-        .file:hover {
-            background-color: #00000039 !important;
-            border-bottom:1px solid #851090 ;
-        }
 
         .file-actions {
             margin-left: auto;
@@ -147,8 +161,10 @@
             border: 0;
             overflow: hidden;
         }
+
         .panel {
-background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+            border-radius: 20px 20px 0 0;
+            background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
             color: rgba(255, 255, 255, 0.307);
             padding: 0;
             margin: 0;
@@ -165,6 +181,7 @@ background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
             border: none;
 
         }
+
         .panel button.dark-mode {
             float: right;
             background-color: transparent !important;
@@ -393,7 +410,7 @@ background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
         for (var i = 0; i < elements.length; i++) {
             elements[i].classList.toggle('dark-mode');
         }
-        // document.body.classList.toggle('dark-mode');
+        // document.file.classList.toggle('dark-mode');
         // document.querySelector('.file').classList.toggle('dark-mode');
     }
     function saveDarkMode() {
@@ -512,16 +529,20 @@ background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
                 for (let i = 0; i < response.data.length; i++) {
                     let file = document.createElement('div');
                     file.classList.add('file');
+                    var storedDarkMode = localStorage.getItem('darkMode');
+                    if (storedDarkMode == 'true') {
+                        file.classList.add('dark-mode');
+                    }
                     let filename = response.data[i]
                     file.innerHTML =
-                    '<span class="file-icon">' +
+                        '<span class="file-icon">' +
                         getIconbyExtension(filename) +
                         '</span> <small class="file-name"> ' + shortName(filename) + '</small>' +
                         '<span class="file-actions">\
                             <button onclick="downloadFile(`'+ filename + '`);refreshFilelist(false);">💾</button>\
                             <button onclick="deleteFile(`'+ filename + '`);refreshFilelist(false);">🗑️</button>\
                             </span>';
-                    file.setAttribute('id',shortName(filename));
+                    file.setAttribute('id', shortName(filename));
                     filelist.appendChild(file);
                 }
                 if (toast)
@@ -535,15 +556,16 @@ background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
                 if (toast)
                     showToast('❌ Reload failed', false);
             })
+
     }
 </script>
 <script>//onload
     refreshFilelist();
     var storedDarkMode = localStorage.getItem('darkMode');
-            console.log('从 localStorage 加载暗黑模式: ' + storedDarkMode);
-            if (storedDarkMode == 'true') {
-                toggleDarkMode();
-            }
+    console.log('从 localStorage 加载暗黑模式: ' + storedDarkMode);
+    if (storedDarkMode == 'true') {
+        toggleDarkMode();
+    }
 </script>
 
 </html>
