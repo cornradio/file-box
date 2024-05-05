@@ -95,9 +95,9 @@
         }
 
         .file:hover {
-            background-color: #0000005a !important;
+            background-color: #00000039 !important;
+            border-bottom:1px solid #851090 ;
         }
-        
 
         .file-actions {
             margin-left: auto;
@@ -211,9 +211,7 @@ background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
         }
 
         .toast {
-            background-color: rgba(0, 0, 0, 0.816);
             backdrop-filter: blur(10px);
-            color: #00ebd7;
             font-size: smaller;
             padding: 4px 8px;
             margin-bottom: 10px;
@@ -514,16 +512,16 @@ background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
                 for (let i = 0; i < response.data.length; i++) {
                     let file = document.createElement('div');
                     file.classList.add('file');
-
                     let filename = response.data[i]
                     file.innerHTML =
-                        '<span class="file-icon">' +
+                    '<span class="file-icon">' +
                         getIconbyExtension(filename) +
                         '</span> <small class="file-name"> ' + shortName(filename) + '</small>' +
                         '<span class="file-actions">\
                             <button onclick="downloadFile(`'+ filename + '`);refreshFilelist(false);">💾</button>\
                             <button onclick="deleteFile(`'+ filename + '`);refreshFilelist(false);">🗑️</button>\
                             </span>';
+                    file.setAttribute('id',shortName(filename));
                     filelist.appendChild(file);
                 }
                 if (toast)
