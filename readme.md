@@ -1,3 +1,4 @@
+```
 pip install flask flask_cors
 
 run :
@@ -6,3 +7,4 @@ source .venv/bin/activate
 
 and 
 ./start_servers.sh
+```
